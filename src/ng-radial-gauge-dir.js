@@ -339,17 +339,32 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var onValueChanged = function(pValue, pPrecision, pValueUnit) {
                  if (typeof pValue === 'undefined' || pValue == null) return;
                  
+                 var minMinus10Percent = minLimit - (0.10 * (maxLimit - minLimit));
+                 var maxPlus10Percent = maxLimit + (0.10 * (maxLimit - minLimit));
+                 pValue = Math.max(minMinus10Percent, pValue);
+                 pValue = Math.min(maxPlus10Percent, pValue);
+
+                 var easing = 'elastic';
+                 if(pValue == minMinus10Percent || pValue == maxPlus10Percent)
+                 {
+                    easing = 'bounce';
+                 }
+
+                 var needleAngle = getNewAngle(pValue);
+                 needle.transition()
+                     .duration(transitionMs)
+                     .ease(easing)
+                     .attr('transform', 'rotate('+needleAngle+')');
+                 svg.selectAll('.mtt-graduationValueText')
+                 .text('[ ' + pValue.toFixed(pPrecision) + pValueUnit + ' ]') ;
+
                  if (needle && pValue >= minLimit && pValue <= maxLimit) {
-                        var needleAngle = getNewAngle(pValue);
-                        needle.transition()
-                            .duration(transitionMs)
-                            .ease('elastic')
-                            .attr('transform', 'rotate('+needleAngle+')');
-                        svg.selectAll('.mtt-graduationValueText')
-                        .text('[ ' + pValue.toFixed(pPrecision) + pValueUnit + ' ]') ;
+                        svg.selectAll('.mtt-graduation-needle').attr("fill", needleColor);
+                        svg.selectAll('.mtt-graduationValueText').attr("fill", needleColor);
+                        svg.selectAll('.mtt-graduation-needle-center').attr("fill", needleColor);
                     } else {
-                        svg.selectAll('.mtt-graduation-needle').remove();
-                        svg.selectAll('.mtt-graduationValueText').remove();
+                        svg.selectAll('.mtt-graduation-needle').attr("fill", inactiveColor);
+                        svg.selectAll('.mtt-graduationValueText').attr("fill", inactiveColor);
                         svg.selectAll('.mtt-graduation-needle-center').attr("fill", inactiveColor);
                     }
              };
