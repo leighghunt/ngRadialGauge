@@ -359,11 +359,11 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  .text('[ ' + pValue.toFixed(pPrecision) + pValueUnit + ' ]') ;
 
                  if (needle && pValue >= minLimit && pValue <= maxLimit) {
-                        svg.selectAll('.mtt-graduation-needle').attr("fill", needleColor);
+                        svg.selectAll('.mtt-graduation-needle').style("fill", needleColor);
                         svg.selectAll('.mtt-graduationValueText').attr("fill", needleColor);
                         svg.selectAll('.mtt-graduation-needle-center').attr("fill", needleColor);
                     } else {
-                        svg.selectAll('.mtt-graduation-needle').attr("fill", inactiveColor);
+                        svg.selectAll('.mtt-graduation-needle').style("fill", inactiveColor);
                         svg.selectAll('.mtt-graduationValueText').attr("fill", inactiveColor);
                         svg.selectAll('.mtt-graduation-needle-center').attr("fill", inactiveColor);
                     }
